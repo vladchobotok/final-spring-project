@@ -1,0 +1,87 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <title>Patient Page</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            background: url("https://www.itij.com/sites/default/files/styles/og_image/public/2021-08/hospital-modern.jpg?h=f8702894&itok=r_2edjAc") no-repeat center fixed;
+            background-size: cover;
+        }
+        main {
+            flex: 1 0 auto;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="cyan">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo"><i class="material-icons">local_hospital </i><th:block th:text="#{hospital}"/></a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li>
+                        <a class='dropdown-trigger btn' href='#' data-target='dropdown1' th:text="#{changeLanguage}"></a>
+                        <ul id='dropdown1' class='dropdown-content'>
+                            <div th:with="currentUrl=(${@currentUrlWithoutParam.apply('lang')})">
+                                <li> <a class="dropdown-item" th:href="@{${currentUrl}(lang=en)}">English</a></li>
+                                <li> <a class="dropdown-item" th:href="@{${currentUrl}(lang=ua)}">Українська</a></li>
+                            </div>
+                        </ul>
+                    </li>
+                    <li><a href="/logout" class="btn cyan darken-2" th:text="#{logout}"/></li>
+                </ul>
+            </div>
+            <div class="input-field col s12">
+            </div>
+        </div>
+    </nav>
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="$/logout" class="btn cyan lighten-1" th:text="#{logout}"/></li>
+    </ul>
+</header>
+<main>
+    <div class="container">
+        <ul class="collection with-header">
+            <li class="collection-header">
+                <br>
+                <h4 style="display: inline" th:text="|${patient.getUser().getName()} ${patient.getUser().getSurname()}|"/>
+                <a class="btn right cyan lighten-1 modal-trigger" href="#modal2"  th:text="#{hospitalCard}"/>
+                <div id="modal2" class="modal">
+                    <div class="container">
+                        <h5 th:text="|#{yourDiagnosis} ${patient.getTreatment().getDiagnosis().getType()}|"/>
+                        <h5 th:text="|#{yourDoctor} ${patient.getDoctor().getUser().getName()} ${patient.getDoctor().getUser().getSurname()} (${patient.getDoctor().getDoctorsType().getType()})|"/>
+                        <h5 th:text="|#{yourStatus} ${patient.getUser().getRole().name()}|"/>
+                    </div>
+                </div>
+            </li>
+            <li class="collection-item ">
+                <span class="title" th:text="|#{nameList} ${patient.getUser().getName()}|"/>
+                <p th:text="|#{surnameList} ${patient.getUser().getSurname()}|"/>
+                <p th:text="|#{birthdayList} ${patient.getUser().getBirthday()}|"/>
+            </li>
+        </ul>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('select').formSelect();
+        $('.sidenav').sidenav();
+        $('.modal').modal();
+        $('.dropdown-trigger').dropdown();
+    });
+</script>
+</body>
+</html>

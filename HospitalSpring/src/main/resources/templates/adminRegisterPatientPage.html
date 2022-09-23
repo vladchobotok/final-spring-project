@@ -1,0 +1,104 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <title>Register patients</title>
+    <style>
+        body {
+            background: url("https://www.itij.com/sites/default/files/styles/og_image/public/2021-08/hospital-modern.jpg?h=f8702894&itok=r_2edjAc") no-repeat center fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="cyan">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo"><i class="material-icons">local_hospital </i><th:block th:text="#{hospital}"/></a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li>
+                        <a class='dropdown-trigger btn' href='#' data-target='dropdown1' th:text="#{changeLanguage}"></a>
+                        <ul id='dropdown1' class='dropdown-content'>
+                            <div th:with="currentUrl=(${@currentUrlWithoutParam.apply('lang')})">
+                                <li> <a class="dropdown-item" th:href="@{${currentUrl}(lang=en)}">English</a></li>
+                                <li> <a class="dropdown-item" th:href="@{${currentUrl}(lang=ua)}">Українська</a></li>
+                            </div>
+                        </ul>
+                    </li>
+                    <li><a href="/logout" class="btn cyan darken-2" th:text="#{logout}"/></li>
+                </ul>
+            </div>
+            <div class="input-field col s12">
+            </div>
+        </div>
+    </nav>
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="$/logout" class="btn cyan lighten-1" th:text="#{logout}"/></li>
+    </ul>
+</header>
+<div class="row">
+    <div class="col m6 offset-m3 l4 offset-l4 s12">
+        <div class="card-panel z-depth-5" style="min-height: 90vh; margin-top: 4vh; position: relative">
+            <form method="post" th:action="@{/admin/registerPatient}" class="center-block" style="text-align: center; min-width: 80%">
+                <h4 th:text="#{registerPatient}"/></h4>
+                <div th:switch="${bad_getaway}">
+                    <p class="red-text" th:case="'emptyName'" th:text="#{emptyName}"/>
+                    <p class="red-text" th:case="'emptySurname'" th:text="#{emptySurname}"/>
+                    <p class="red-text" th:case="'emptyEmail'" th:text="#{emptyEmail}"/>
+                    <p class="red-text" th:case="'incorrectBirthday'" th:text="#{incorrectBirthday}"/>
+                    <p class="red-text" th:case="'emptyPassword'" th:text="#{emptyPassword}"/>
+                    <p class="red-text" th:case="'accountAlreadyExists'" th:text="#{accountAlreadyExists}"/>
+                    <p class="red-text" th:case="'wrongConfirmedPassword'" th:text="#{wrongConfirmedPassword}"/>
+                    <p class="red-text" th:case="'incorrectEmailFormat'" th:text="#{incorrectEmailFormat}"/>
+                    <p class="red-text" th:case="'incorrectPasswordFormat'" th:text="#{incorrectPasswordFormat}"/>
+                </div>
+                <div class="input-field" style="margin-top: 40px">
+                    <input type="text" id="name" name="name" placeholder="Ivanov">
+                    <label class="active" for="name" th:text="#{name}"/>
+                </div>
+                <div class="input-field" >
+                    <input type="text" id="surname" name="surname" placeholder="Ivan">
+                    <label class="active" for="surname" th:text="#{surname}"/>
+                </div>
+                <div class="input-field">
+                    <input type="email" id="email" name="email" placeholder="ivanovivan@gmail.com">
+                    <label class="active" for="email" th:text="#{email}"/>
+                </div>
+                <div class="input-field">
+                    <input type="date" id="birthday" name="birthday">
+                    <label class="active" for="birthday" th:text="#{birthday}"/>
+                </div>
+                <div class="input-field">
+                    <input type="password" id="password" name="password">
+                    <label class="active" for="password" th:text="#{pass}"/>
+                </div>
+                <div class="input-field">
+                    <input type="password" id="confirmedPassword" name="confirmedPassword">
+                    <label class="active" for="confirmedPassword" th:text="#{repeatPass}"/>
+                </div>
+                <div class="input-field center">
+                    <button class="btn right cyan lighten-1" type="submit" th:text="#{register}"/>
+                </div>
+            </form>
+            <a style="position: absolute; bottom: 2%; left: 4%" th:href="@{/admin}" th:text="#{home}"/>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('select').formSelect();
+        $('.dropdown-trigger').dropdown();
+    });
+</script>
+</body>
+</html>

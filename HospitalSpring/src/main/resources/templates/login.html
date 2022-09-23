@@ -1,0 +1,51 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <meta charset="utf-8">
+    <title>Hospital | Sign in</title>
+</head>
+
+<body class="cyan">
+<div class="row">
+    <div class="col m6 offset-m3 l4 offset-l4 s12">
+        <div class="card-panel z-depth-5" style="min-height: 90vh; margin-top: 4vh; position: relative">
+            <div class="valign-wrapper" style="margin-top: 20%">
+                <form method="post" action="/login" class="center-block" style="text-align: center; min-width: 80%">
+                    <h1 th:text="#{login}"></h1>
+                    <h4 th:text="#{welcome}"></h4>
+                    <div th:if="${param.error} and ${session}" th:with="errorMsg=${session['SPRING_SECURITY_LAST_EXCEPTION']}">
+                        <p class="red-text" th:text="#{incorrectInput}"/>
+                    </div>
+                    <div class="input-field" style="margin-top: 40px">
+                        <i class="material-icons prefix">email</i>
+                        <input type="text" id="email" name="email">
+                        <label for="email" th:text="#{email}"/>
+                    </div>
+                    <div class="input-field">
+                        <i class="material-icons prefix">lock</i>
+                        <input type="password" id="password" name="password">
+                        <label for="password"  th:text="#{pass}"></label>
+                    </div>
+                    <div class="input-field center">
+                        <button class="btn-large indigo darken-4" type="submit" th:text="#{login}"/>
+                    </div>
+                    <p th:text="#{noAccount}"/> <a href="/register" th:text="#{register}"/>
+                </form>
+                <a style="position: absolute; bottom: 2%" href="/" th:text="#{home}"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function(){
+    });
+</script>
+</body>
+</html>
+
+

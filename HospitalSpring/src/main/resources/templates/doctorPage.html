@@ -1,0 +1,162 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <title>Doctor Page</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            background: url("https://www.itij.com/sites/default/files/styles/og_image/public/2021-08/hospital-modern.jpg?h=f8702894&itok=r_2edjAc") no-repeat center fixed;
+            background-size: cover;
+        }
+        main {
+            flex: 1 0 auto;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="cyan">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo"><i class="material-icons">local_hospital </i><th:block th:text="#{hospital}"/></a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li>
+                        <a class='dropdown-trigger btn' href='#' data-target='dropdown1' th:text="#{changeLanguage}"></a>
+                        <ul id='dropdown1' class='dropdown-content'>
+                            <div th:with="currentUrl=(${@currentUrlWithoutParam.apply('lang')})">
+                                <li> <a class="dropdown-item" th:href="@{${currentUrl}(lang=en)}">English</a></li>
+                                <li> <a class="dropdown-item" th:href="@{${currentUrl}(lang=ua)}">Українська</a></li>
+                            </div>
+                        </ul>
+                    </li>
+                    <li><a href="/logout" class="btn cyan darken-2" th:text="#{logout}"/></li>
+                </ul>
+            </div>
+            <div class="input-field col s12">
+            </div>
+        </div>
+    </nav>
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="$/logout" class="btn cyan lighten-1" th:text="#{logout}"/></li>
+    </ul>
+</header>
+<main>
+    <div class="container">
+        <ul class="collection with-header">
+            <li class="collection-header">
+                <h4 th:text="|${doctor.getUser().getName()} ${doctor.getUser().getSurname()}|"/>
+                <div th:switch="${bad_getaway}" style="text-align: center">
+                    <p class="red-text" th:case="'emptyExecutor'" th:text="#{emptyExecutor}"/>
+                    <p class="red-text" th:case="'emptyAssignmentType'" th:text="#{emptyAssignmentType}"/>
+                    <p class="red-text" th:case="'nurseCannotDoOperations'" th:text="#{nurseCannotDoOperations}"/>
+                    <p class="red-text" th:case="'emptyDiagnosis'" th:text="#{emptyDiagnosis}"/>
+                </div>
+            </li>
+            <th:block th:each="patient, iterStat: ${allPatients}">
+                <li class="collection-item ">
+                    <th:block th:with="currDoctorId = ${doctor.getId()}, executorId = ${patient.getTreatment().getAssignment().getExecutor().getId()}, patientDoctorId = ${patient.getDoctor().getId()}">
+                    <th:block th:if ="${executorId == currDoctorId}">
+                        <form method="post" th:action="@{/doctor/completeAssignment}">
+                            <input type="hidden" id="patientId2" name="patientId2" th:value="${patient.getId()}">
+                            <button class="btn right cyan lighten-1" th:text="#{completeAssignment}"/>
+                        </form>
+                    </th:block>
+                    <span class="title" th:text="#{nameList}"/> <th:block th:text="| ${patient.getUser().getName()}|"/>
+                    <p></p>
+                    <span th:text="#{surnameList}"/> <th:block th:text="| ${patient.getUser().getSurname()}|"/>
+                        <p></p>
+                        <th:block th:if ="${currDoctorId == patientDoctorId}">
+                            <a class="btn right cyan lighten-1 modal-trigger" th:href="@{|#modal_${iterStat.index}|}" th:text="#{createAssignment}"/>
+                            <div th:id="modal_+${iterStat.index}" class="modal" style="min-height: 50%">
+                                <form method="post" th:action="@{/doctor/createAssignment}" class="center-block" style="text-align: center; min-width: 100%">
+                                    <div class="container">
+                                        <div class="input-field" >
+                                            <input type="hidden" id="patientId" name="patientId" th:value="${patient.getId()}">
+                                        </div>
+
+                                        <div class="input-field" style="margin-top: 40px">
+                                            <select name="doctorId2">
+                                                <option value="0" disabled selected th:text="#{executor}"/>
+                                                <th:block th:each="doctorExecutor, loop: ${doctorsAndNurses}">
+                                                    <option th:value= "${doctorExecutor.getId()}"> <th:block th:text="|${doctorExecutor.getUser().getName()} ${doctorExecutor.getUser().getSurname()} (${doctorExecutor.getDoctorsType().getType()})|"/></option>
+                                                </th:block>
+                                            </select>
+                                        </div>
+                                        <div class="input-field ">
+                                            <input type="text" id="description" name="description">
+                                            <label class="active" for="description" th:text="#{description}"/>
+                                        </div>
+                                        <select name="assignmentTypeId">
+                                            <option value="0" disabled selected th:text="#{assignmentType}"/>
+                                            <th:block th:each="assignmentsType, loop: ${assignmentsTypes}">
+                                                <option th:value= "${assignmentsType.getId()}"><th:block th:text="|${assignmentsType.getType()}|"/></option>
+                                            </th:block>
+                                        </select>
+                                        <div class="input-field center" style="margin-bottom: 40px">
+                                            <button class="btn right cyan lighten-1" type="submit" th:text="#{submit}"/>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </th:block>
+                    <span th:text="#{birthdayList}"/> <th:block th:text="| ${patient.getUser().getBirthday()}|"/>
+                        <p></p>
+                        <th:block th:if="${currDoctorId == patientDoctorId}">
+                            <a class="btn right cyan lighten-1 modal-trigger" th:href="@{|#mod_${iterStat.index}|}" th:text="#{defineDiagnosis}" />
+                            <div th:id="mod_+${iterStat.index}" class="modal" style="min-height: 50%">
+                                <form method="post" th:action="@{/doctor/defineDiagnosis}" class="center-block" style="text-align: center; min-width: 80%">
+                                    <div class="container">
+                                        <div class="input-field">
+                                            <input type="hidden" id="patientId1" name="patientId1" th:value="${patient.getId()}">
+                                        </div>
+                                        <div class="input-field" style="margin-top: 40px">
+                                            <select name="diagnosis1">
+                                                <option value="0" disabled selected th:text="#{diagnosis}"/>
+                                                <th:block th:each="diagnosis, loop: ${diagnoses}">
+                                                    <option th:value="${diagnosis.getId()}"><th:block th:text="|${diagnosis.getType()}|"/></option>
+                                                </th:block>
+                                            </select>
+                                        </div>
+                                        <div class="input-field center" style="margin-bottom: 40px">
+                                            <button class="btn right cyan lighten-1" type="submit" th:text="#{submit}"/>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </th:block>
+                        <span th:text="#{currentDoctorList}"/> <th:block th:text="| ${patient.getDoctor().getUser().getName()} ${patient.getDoctor().getUser().getSurname()} (${patient.getDoctor().getDoctorsType().getType()})|"/>
+                        <p></p>
+                        <span th:text="#{assignmentTypeList}"/> <th:block th:text="| ${patient.getTreatment().getAssignment().getType().getType()}|"/>
+                        <p></p>
+                        <span th:text="#{assignmentDescriptionList}"/> <th:block th:text="| ${patient.getTreatment().getAssignment().getDescription()}|"/>
+                        <p></p>
+                        <span th:text="#{diagnosisList}"/> <th:block th:text="| ${patient.getTreatment().getDiagnosis().getType()}|"/>
+                        <p></p>
+                    </th:block>
+                </li>
+            </th:block>
+        </ul>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('select').formSelect();
+        $('.sidenav').sidenav();
+        $('.modal').modal();
+        $('.dropdown-trigger').dropdown();
+    });
+</script>
+</body>
+</html>

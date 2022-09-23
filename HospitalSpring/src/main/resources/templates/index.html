@@ -1,0 +1,59 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+  <title>Hospital Project</title>
+  <style>
+    body{
+      background: url("https://www.itij.com/sites/default/files/styles/og_image/public/2021-08/hospital-modern.jpg?h=f8702894&itok=r_2edjAc") no-repeat center fixed;
+      background-size: cover;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <nav class="cyan">
+    <div class="container">
+      <div class="nav-wrapper">
+        <a href="/login" class="brand-logo"><i class="material-icons">local_hospital </i><th:block th:text="#{hospital}"/></a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+          <li>
+            <a class='dropdown-trigger btn' href='#' data-target='dropdown1' th:text="#{changeLanguage}"></a>
+            <ul id='dropdown1' class='dropdown-content'>
+              <div th:with="currentUrl=(${@currentUrlWithoutParam.apply('lang')})">
+                <li> <a class="dropdown-item" th:href="@{${currentUrl}(lang=en)}">English</a></li>
+                <li> <a class="dropdown-item" th:href="@{${currentUrl}(lang=ua)}">Українська</a></li>
+              </div>
+            </ul>
+          </li>
+          <li><a href="/register" class="btn cyan darken-2" th:text="#{register}" /></li>
+          <li><a href="/login" class="btn cyan darken-2" th:text="#{login}" /></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <ul class="sidenav" id="mobile-demo">
+    <li><a href="/" th:text="#{home}"/></li>
+  </ul>
+</header>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('.sidenav').sidenav();
+    $('.materialboxed').materialbox();
+    $('select').formSelect();
+    $('.dropdown-trigger').dropdown();
+  });
+</script>
+</body>
+</html>

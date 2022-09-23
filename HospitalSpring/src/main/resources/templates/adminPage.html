@@ -1,0 +1,115 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <title>Admin Page</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            background: url("https://www.itij.com/sites/default/files/styles/og_image/public/2021-08/hospital-modern.jpg?h=f8702894&itok=r_2edjAc") no-repeat center fixed;
+            background-size: cover;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        .col form{
+            width:50%;
+            margin:0 auto;
+        }
+        .buttonHolder{
+            text-align: center;
+            margin: 2vh 2vh 2vh 2vh;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <nav class="cyan">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo"><i class="material-icons">local_hospital </i><th:block th:text="#{hospital}"/></a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li>
+                        <a class='dropdown-trigger btn' href='#' data-target='dropdown1' th:text="#{changeLanguage}"></a>
+                        <ul id='dropdown1' class='dropdown-content'>
+                            <div th:with="currentUrl=(${@currentUrlWithoutParam.apply('lang')})">
+                                <li> <a class="dropdown-item" th:href="@{${currentUrl}(lang=en)}">English</a></li>
+                                <li> <a class="dropdown-item" th:href="@{${currentUrl}(lang=ua)}">Українська</a></li>
+                            </div>
+                        </ul>
+                    </li>
+                    <li><a href="/logout" class="btn cyan darken-2" th:text="#{logout}"/></li>
+                </ul>
+            </div>
+            <div class="input-field col s12">
+            </div>
+        </div>
+    </nav>
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="$/logout" class="btn cyan lighten-1" th:text="#{logout}"/></li>
+    </ul>
+</header>
+
+<main>
+    <div class="container">
+        <ul class="collection with-header">
+            <li class="collection-header"><h4>Admin</h4>
+                <div th:switch="${bad_getaway}" style="text-align: center">
+                    <p class="red-text" th:case="'emptyDoctor'" th:text="#{emptyDoctor}"/>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container" style="background: white; min-height: auto;">
+        <div class="col" style=" display: flex; flex-direction: column; text-align: center">
+            <form th:action="@{/admin/registerDoctor}">
+                <p class="buttonHolder">
+                    <button class="btn cyan lighten-1"><th:block th:text="#{registerDoctor}"/></button>
+                </p>
+            </form>
+            <form th:action="@{/admin/registerPatient}">
+                <p class="buttonHolder">
+                    <button class="btn cyan lighten-1"><th:block th:text="#{registerPatient}"/></button>
+                </p>
+            </form>
+            <form th:action="@{/admin/adminDoctorsPage}">
+                <p class="buttonHolder">
+                    <input type="hidden" name="page" value="1">
+                    <button class="btn cyan lighten-1"><th:block th:text="#{doctorsList}"/></button>
+                </p>
+            </form>
+            <form th:action="@{/admin/adminPatientsPage}">
+                <p class="buttonHolder">
+                    <input type="hidden" name="page" value="1">
+                    <button class="btn cyan lighten-1"><th:block th:text="#{patientsList}"/></button>
+                </p>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('select').formSelect();
+        $('.tabs').tabs();
+        $('.sidenav').sidenav();
+        $('.modal').modal();
+        $('.dropdown-trigger').dropdown();
+    });
+</script>
+</body>
+</html>

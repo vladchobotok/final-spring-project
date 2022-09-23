@@ -1,0 +1,122 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <title>Doctors List</title>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            background: url("https://www.itij.com/sites/default/files/styles/og_image/public/2021-08/hospital-modern.jpg?h=f8702894&itok=r_2edjAc") no-repeat center fixed;
+            background-size: cover;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        .formSelect{
+            width: 25%;
+            margin: 2vh 0.625% 2vh 2vh;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="cyan">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo"><i class="material-icons">local_hospital </i><th:block th:text="#{hospital}"/></a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li>
+                        <a class='dropdown-trigger btn' href='#' data-target='dropdown1' th:text="#{changeLanguage}"></a>
+                        <ul id='dropdown1' class='dropdown-content'>
+                            <div th:with="currentUrl=(${@currentUrlWithoutParam.apply('lang')})">
+                                <li> <a class="dropdown-item" th:href="@{${currentUrl}(lang=en)}">English</a></li>
+                                <li> <a class="dropdown-item" th:href="@{${currentUrl}(lang=ua)}">Українська</a></li>
+                            </div>
+                        </ul>
+                    </li>
+                    <li><a href="/logout" class="btn cyan darken-2" th:text="#{logout}"/></li>
+                </ul>
+            </div>
+            <div class="input-field col s12">
+            </div>
+        </div>
+    </nav>
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="$/logout" class="btn cyan lighten-1" th:text="#{logout}"/></li>
+    </ul>
+</header>
+<main>
+
+    <div class="container" style="background: white">
+        <div class="col s12">
+            <div class="input-field col s4">
+                <a style="float: right; margin: 2vh" th:href="@{/admin}" th:text="#{home}"/>
+                <form class="formSelect" th:action="@{/admin/adminDoctorsPage/sorting}" method="post">
+                    <select name="type">
+                        <option value="0" disabled selected th:text="#{sortingType}"/>
+                        <option value="1" th:text="#{alphabet}"/>
+                        <option value="2" th:text="#{category}"/>
+                        <option value="3" th:text="#{countPatients}"/>
+                        <option value="4" th:text="#{doctorId}"/>
+                    </select>
+                    <button type="submit" class="btn middle cyan lighten-1">
+                        <strong th:text="#{sort}"/>
+                    </button>
+                </form>
+            </div>
+
+            <ul class="collection col s12">
+                <th:block th:each="doctor :${page.content}">
+                    <li class="collection-item ">
+                        <span class="title" th:text="#{nameList}"/>
+                        <th:block th:text="| ${doctor.getUser().getName()}|"/>
+                        <p></p>
+                        <span th:text="#{surnameList}"/>
+                        <th:block th:text="| ${doctor.getUser().getSurname()}|"/>
+                        <p></p>
+                        <span th:text="#{doctorTypeList}"/>
+                        <th:block th:text="| ${doctor.getDoctorsType().getType()}|"/>
+                        <p></p>
+                        <span th:text="#{doctorIdList}"/>
+                        <th:block th:text="| ${doctor.getId()}|"/>
+                        <p></p>
+                    </li>
+                </th:block>
+            </ul>
+            <ul class="pagination col s12" style="margin-left: 50%; margin-bottom: 2%">
+                <th:block th:each="curr, currStat: ${#numbers.sequence(1, page.getTotalPages())}">
+                    <th:block th:if="${currStat.index == page.getNumber()}">
+                        <li class="active cyan lighten-1"><a style="pointer-events: none; cursor: default;"><th:block th:text="| ${currStat.index + 1}|"/></a></li>
+                    </th:block>
+                    <th:block th:unless="${currStat.index == page.getNumber()}">
+                        <li class="waves-effect"><a th:href="@{|/admin/adminDoctorsPage?page=${currStat.index + 1}|}"><th:block th:text="| ${currStat.index + 1}|"/></a></li>
+                    </th:block>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('select').formSelect();
+        $('.tabs').tabs();
+        $('.sidenav').sidenav();
+        $('.modal').modal();
+        $('.dropdown-trigger').dropdown();
+    });
+</script>
+</body>
+</html>
