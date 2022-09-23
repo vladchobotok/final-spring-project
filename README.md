@@ -1,9 +1,9 @@
 Hospital (Spring Framework)
 • The system administrator has access to a list of doctors by category (pediatrician, traumatologist, surgeon, ...) and a list of patients. Implement the ability to sort:
-1) patients:
+1) Patients:
 - in alphabetical order;
 - by date of birth;
-2) doctors:
+2) Doctors:
 - in alphabetical order;
 - by category;
 - by the number of patients.
